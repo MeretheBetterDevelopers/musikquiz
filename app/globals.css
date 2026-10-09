@@ -37,6 +37,12 @@
   100% { transform: translateY(0) scaleX(1) rotate(0deg) rotateX(720deg); }
 }
 @keyframes mq-spejl { 0%, 62% { transform: scaleX(-1); } 80%, 100% { transform: scaleX(1); } }
+@keyframes mq-foer { 0% { opacity: 0; transform: scale(.9); } 12% { opacity: 1; } 88% { opacity: 1; transform: scale(1.06); } 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes mq-prik { 0%, 100% { opacity: .2; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-14px); } }
+@keyframes mq-brag { 0% { opacity: 1; transform: rotate(var(--v)) translateY(0) scaleY(.4); } 100% { opacity: 0; transform: rotate(var(--v)) translateY(calc(var(--l) * -1)) scaleY(1); } }
+@keyframes mq-glod { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes mq-kronefald { 0% { opacity: 0; transform: translateY(-600px) rotate(-40deg); } 15% { opacity: 1; } 70% { transform: translateY(14px) rotate(6deg); } 85% { transform: translateY(-10px) rotate(-3deg); } 100% { opacity: 1; transform: translateY(0) rotate(0); } }
+@keyframes mq-op { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
 @keyframes mq-pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
 
 * { box-sizing: border-box; }
@@ -155,17 +161,32 @@ button { cursor: pointer; }
 .vinder { align-items: center; justify-content: center; gap: 28px; text-align: center; }
 .konfetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .konfetti span { position: absolute; top: -60px; }
-.vinder > :not(.konfetti) { position: relative; }
-.vinder .krone { font-size: 120px; color: var(--gold); animation: mq-float 2.4s ease-in-out infinite; }
-.vinder h2 { margin: 0; font-weight: 800; line-height: .9; letter-spacing: -0.04em; padding: 0 80px; text-wrap: balance; }
-.vinder .sum { font-size: 64px; font-weight: 700; color: var(--gold); }
+.vinder > .krone, .vinder > h2, .vinder > .sum, .vinder > .resten { position: relative; }
+.glod { position: absolute; inset: 0; background: radial-gradient(900px 620px at 50% 46%, #ffd54a38, transparent 70%);
+        animation: mq-glod 3s ease-in-out 3.2s infinite alternate both; }
+.foer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 110px; font-weight: 800;
+        letter-spacing: -0.03em; animation: mq-foer 3.2s ease-in both; }
+.foer i { font-style: normal; color: var(--gold); animation: mq-prik .9s ease-in-out infinite; }
+.foer i:nth-child(2) { animation-delay: .15s; }
+.foer i:nth-child(3) { animation-delay: .3s; }
+.brag { position: absolute; left: 50%; top: 46%; pointer-events: none; }
+.brag span { position: absolute; left: -7px; top: -22px; width: 14px; height: 44px; border-radius: 7px; opacity: 0;
+             animation: mq-brag 1.3s cubic-bezier(.1, .7, .2, 1) 3.2s both; }
+.vnavn { position: relative; display: inline-block; }
+.vinder .solbriller { left: .04em; top: 0; margin-top: -.1em; width: 1.25em; }
+.vinder .krone { font-size: 120px; color: var(--gold); animation: mq-kronefald 1s cubic-bezier(.3, .7, .3, 1) 3.5s both; }
+.vinder .krone span { display: inline-block; animation: mq-float 2.4s ease-in-out 4.5s infinite; }
+.vinder h2 { animation: mq-pop .7s cubic-bezier(.2, .9, .3, 1.2) 3.2s both; margin: 0; font-weight: 800; line-height: .9; letter-spacing: -0.04em; padding: 0 80px; text-wrap: balance; }
+.vinder .sum { font-size: 64px; font-weight: 700; color: var(--gold); animation: mq-op .6s ease-out 3.9s both; }
 .resten { display: flex; gap: 20px; margin-top: 56px; }
 .resten div { display: flex; align-items: center; gap: 20px; height: 96px; padding: 0 32px; border-radius: 20px;
               background: #15151fcc; border: 2px solid var(--line); font-size: 36px; font-weight: 700; }
+.resten div { animation: mq-op .5s ease-out both; }
 .resten .rang { color: var(--muted); font-weight: 400; }
 .resten .point { color: var(--text-2); }
 
 @media (prefers-reduced-motion: reduce) {
-  .konfetti { display: none; }
+  .konfetti, .foer, .brag { display: none; }
+  .vinder h2, .vinder .sum, .vinder .krone, .vinder .krone span, .resten div, .glod { animation: none !important; }
   .eq span, .krone, .svar, .solbriller, .graad, .graad i, .raekke.vend, h2.vend { animation: none !important; }
 }

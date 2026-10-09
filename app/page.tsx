@@ -1,7 +1,7 @@
 "use client";
 
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
-import { HOLD, RUNDER } from "./quiz-data";
+import { HOLD, RUNDER, VINDERSANG } from "./quiz-data";
 import { login, logud, pause, spil, spotifyAktiv, startSpotify } from "./spotify";
 
 const HOLDFARVER = ["#FFB547", "#FF5CA8", "#5BF29B", "#5CC8FF", "#C9A2FF"];
@@ -20,7 +20,8 @@ const SKAERME: Skaerm[] = [{ type: "start" }];
 RUNDER.forEach((runde, r) => {
   SKAERME.push({ type: "intro", r });
   runde.sange.forEach((_, n) => SKAERME.push({ type: "sp", r, n, id: r * 100 + n }));
-  SKAERME.push({ type: "stilling", r });
+  // Efter sidste runde går man direkte til vinderskærmen
+  if (r < RUNDER.length - 1) SKAERME.push({ type: "stilling", r });
 });
 SKAERME.push({ type: "vinder" });
 
@@ -249,6 +250,16 @@ export default function Quiz() {
     setSt((x) => ({ ...START, navne: x.navne }));
   }
 
+  // Vindersangen starter sammen med optakten, så omkvædet rammer når navnet afsløres
+  const erVinder = s.type === "vinder";
+  useEffect(() => {
+    if (!erVinder || !VINDERSANG.spotify || spotify !== "klar") return;
+    spil(VINDERSANG.spotify, VINDERSANG.start).then(
+      () => setNu(VINDERSANG.spotify),
+      (e) => setLydfejl(e.message),
+    );
+  }, [erVinder, spotify]);
+
   const taster = useRef<(e: KeyboardEvent) => void>(() => {});
   taster.current = (e) => {
     if (e.target instanceof HTMLInputElement || e.metaKey || e.ctrlKey) return;
@@ -419,7 +430,11 @@ export default function Quiz() {
           {vist ? (
             <>
               <button className="knap fyldt" onClick={() => skift(1)}>
-                {s.n + 1 < runde.sange.length ? "Næste spørgsmål →" : "Se stillingen →"}
+                {s.n + 1 < runde.sange.length
+                  ? "Næste spørgsmål →"
+                  : s.r + 1 < RUNDER.length
+                    ? "Se stillingen →"
+                    : "Se vinderen →"}
               </button>
             </>
           ) : (
@@ -475,8 +490,32 @@ export default function Quiz() {
     const navn = vindere.map((o) => st.navne[o.h]).join(" & ");
     indhold = (
       <div className="skaerm vinder">
+        {/* Rækkefølge: optakt i 3,2 sek. → brag og navn → krone, solbriller og resten */}
+        <div className="glod" />
+        <div className="foer">
+          Og {vindere.length > 1 ? "vinderne" : "vinderen"} er
+          <span className="mono">
+            <i>.</i>
+            <i>.</i>
+            <i>.</i>
+          </span>
+        </div>
+        <div className="brag">
+          {Array.from({ length: 28 }, (_, k) => (
+            <span
+              key={k}
+              style={
+                {
+                  "--v": `${(k * 360) / 28}deg`,
+                  "--l": `${420 + ((k * 53) % 260)}px`,
+                  background: k % 3 ? "var(--gold)" : HOLDFARVER[k % 5],
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
         <div className="konfetti">
-          {Array.from({ length: 70 }, (_, k) => (
+          {Array.from({ length: 90 }, (_, k) => (
             <span
               key={k}
               style={{
@@ -484,18 +523,25 @@ export default function Quiz() {
                 width: 14 + (k % 3) * 6,
                 height: 26 - (k % 3) * 4,
                 borderRadius: k % 4 === 0 ? 999 : 3,
-                background: HOLDFARVER[k % 5],
-                animation: `mq-fall ${4 + (k % 5)}s linear ${(k % 10) * 0.45}s infinite`,
+                background: k % 6 === 0 ? "var(--gold)" : HOLDFARVER[k % 5],
+                animation: `mq-fall ${4 + (k % 5)}s linear ${3.2 + (k % 10) * 0.45}s infinite`,
               }}
             />
           ))}
         </div>
-        <div className="krone">♛</div>
-        <h2 style={{ fontSize: navn.length <= 16 ? 210 : navn.length <= 26 ? 150 : 100 }}>{navn}</h2>
+        <div className="krone">
+          <span>♛</span>
+        </div>
+        <h2 style={{ fontSize: navn.length <= 16 ? 210 : navn.length <= 26 ? 150 : 100 }}>
+          <span className="vnavn">
+            {navn}
+            <Solbriller delay={4.6} />
+          </span>
+        </h2>
         <div className="sum mono">{max} point</div>
         <div className="resten">
           {orden.slice(vindere.length).map(({ p, h }, i) => (
-            <div key={h}>
+            <div key={h} style={{ animationDelay: `${4.4 + i * 0.18}s` }}>
               <span className="rang mono">#{vindere.length + i + 1}</span>
               {st.navne[h]}
               <span className="point mono">{p}</span>

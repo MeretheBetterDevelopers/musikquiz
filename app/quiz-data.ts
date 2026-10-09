@@ -34,6 +34,13 @@ export const HOLD = [
   "Tabs > Spaces",
 ];
 
+// Spilles på vinderskærmen. Navnet afsløres 3,2 sek. efter skærmen åbner,
+// så start er sat til lige før omkvædet (0:33). Tom spotify = ingen sang.
+export const VINDERSANG = {
+  spotify: "https://open.spotify.com/track/0saBeiGcu2dECTvAknHPzL", // We Are the Champions – Queen
+  start: 30,
+};
+
 export const RUNDER: Runde[] = [
   {
     titel: "Filmmusik",
