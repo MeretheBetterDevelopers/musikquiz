@@ -5,6 +5,7 @@ import { HOLD, RUNDER } from "./quiz-data";
 import { login, logud, pause, spil, spotifyAktiv, startSpotify } from "./spotify";
 
 const HOLDFARVER = ["#FFB547", "#FF5CA8", "#5BF29B", "#5CC8FF", "#C9A2FF"];
+const MEDALJER = ["#FFD54A", "#C9CED6", "#D08B5B"];
 const KEY = "musikquiz-v2";
 
 // Quizzen er én lineær række skærme: start → (intro → spørgsmål → stilling) pr. runde → vinder
@@ -413,18 +414,14 @@ export default function Quiz() {
         </header>
         <div className="raekker">
           {orden.map(({ p, h }, i) => {
-            const foerer = max > 0 && p === max;
+            // Guld, sølv og bronze til de tre første pladser; resten er neutrale
+            const medalje = max > 0 ? MEDALJER[i] : undefined;
             return (
-              <div key={h} className={`raekke${foerer ? " foerer" : ""}`}>
+              <div key={h} className={`raekke${medalje ? " medalje" : ""}`} style={medalje ? farve(medalje) : undefined}>
                 <span className="rang mono">#{i + 1}</span>
                 <span className="navn">{st.navne[h]}</span>
                 <div className="bar">
-                  <i
-                    style={{
-                      width: `${Math.round((p / Math.max(1, max)) * 100)}%`,
-                      background: foerer ? "var(--gold)" : HOLDFARVER[h],
-                    }}
-                  />
+                  <i style={{ width: `${Math.round((p / Math.max(1, max)) * 100)}%` }} />
                 </div>
                 <span className="point mono">{p}</span>
               </div>

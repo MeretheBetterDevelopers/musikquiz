@@ -115,10 +115,11 @@ button { cursor: pointer; }
 .raekke .rang { font-size: 56px; font-weight: 700; color: var(--muted-2); }
 .raekke .navn { font-size: 56px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .raekke .bar { height: 28px; border-radius: 14px; background: #1f1f2c; overflow: hidden; }
-.raekke .bar i { display: block; height: 100%; border-radius: 14px; }
+.raekke .bar i { display: block; height: 100%; border-radius: 14px; background: var(--line-2); }
 .raekke .point { font-size: 80px; font-weight: 700; text-align: right; }
-.raekke.foerer { background: #ffd54a14; border-color: var(--gold); }
-.raekke.foerer .rang, .raekke.foerer .point { color: var(--gold); }
+.raekke.medalje { background: color-mix(in srgb, var(--rc) 8%, transparent); border-color: var(--rc); }
+.raekke.medalje .rang, .raekke.medalje .point { color: var(--rc); }
+.raekke.medalje .bar i { background: var(--rc); }
 
 /* Vinder */
 .vinder { align-items: center; justify-content: center; gap: 28px; text-align: center; }
