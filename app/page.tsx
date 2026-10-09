@@ -258,7 +258,10 @@ export default function Quiz() {
         <h1>
           Musik<em>quiz</em>
         </h1>
-        <div className="luft" />
+        <div className="gif">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="https://media.giphy.com/media/W8krmZSDxPIfm/giphy.gif" alt="Kat som DJ" />
+        </div>
         <div className="holdinput">
           {st.navne.map((navn, h) => (
             <label key={h} className="mono" style={{ color: HOLDFARVER[h] }}>

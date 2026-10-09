@@ -37,6 +37,8 @@ button { cursor: pointer; }
 .start h1 { margin: 0; font-size: 200px; font-weight: 800; line-height: .9; letter-spacing: -0.04em; }
 .start h1 em { font-style: normal; color: #ffb547; }
 .luft { flex: 1; }
+.gif { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 32px 0; }
+.gif img { height: 100%; max-height: 420px; border-radius: 24px; }
 .holdinput { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; }
 .holdinput label { display: flex; flex-direction: column; gap: 12px; padding: 22px 24px; border-radius: 20px;
                    background: var(--surface); border: 2px solid var(--line); font-size: 24px; }
