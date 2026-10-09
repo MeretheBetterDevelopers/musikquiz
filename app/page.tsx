@@ -61,6 +61,34 @@ function Equalizer({ seed, spiller }: { seed: number; spiller: boolean }) {
   );
 }
 
+// Pixel-solbriller der falder ned på førstepladsens navn
+function Solbriller({ delay }: { delay: number }) {
+  return (
+    <svg
+      className="solbriller"
+      viewBox="0 0 26 6"
+      shapeRendering="crispEdges"
+      aria-hidden
+      style={{ animationDelay: `${delay}s` }}
+    >
+      <path fill="#0b0b12" d="M0 0h26v1H0zM2 1h10v3H2zM3 4h8v1H3zM14 1h10v3H14zM15 4h8v1h-8z" />
+      <path fill="#f6f6f8" d="M4 1h1v1H4zM5 2h1v1H5zM6 3h1v1H6zM16 1h1v1h-1zM17 2h1v1h-1zM18 3h1v1h-1z" />
+    </svg>
+  );
+}
+
+// Grædende ansigt med faldende tårer til sidstepladsen efter runde 3
+function Graad() {
+  return (
+    <span className="graad" aria-hidden>
+      😭
+      {[0, 1, 2, 3, 4, 5].map((k) => (
+        <i key={k} style={{ left: k % 2 ? 46 : 8, animationDelay: `${k * 0.22}s` }} />
+      ))}
+    </span>
+  );
+}
+
 export default function Quiz() {
   const [st, setSt] = useState<State>(START);
   const [hentet, setHentet] = useState(false);
@@ -407,7 +435,7 @@ export default function Quiz() {
     indhold = (
       <div className="skaerm stilling">
         <header>
-          <h2>Stillingen</h2>
+          <h2 className={s.r === 1 && max > 0 ? "vend" : ""}>Stillingen</h2>
           <span className="mono">
             efter runde {s.r + 1} af {RUNDER.length}
           </span>
@@ -415,11 +443,22 @@ export default function Quiz() {
         <div className="raekker">
           {orden.map(({ p, h }, i) => {
             // Guld, sølv og bronze til de tre første pladser; resten er neutrale
-            const medalje = max > 0 ? MEDALJER[i] : undefined;
+            // Hold med samme point deler placering (1, 1, 3 …) og dermed også farve
+            const plads = orden.findIndex((o) => o.p === p);
+            const medalje = max > 0 ? MEDALJER[plads] : undefined;
+            // Efter baglæns-runden vises listen først på hovedet og spejlvendt, og tumler så på plads.
+            // --dy flytter rækken til den omvendte plads (række 132px + mellemrum 22px).
+            const vend = s.r === 1 && max > 0;
+            const stil = {
+              ...(medalje ? farve(medalje) : {}),
+              ...(vend ? { "--dy": `${(orden.length - 1 - 2 * i) * 154}px`, animationDelay: `${i * 0.12}s` } : {}),
+            } as CSSProperties;
             return (
-              <div key={h} className={`raekke${medalje ? " medalje" : ""}`} style={medalje ? farve(medalje) : undefined}>
-                <span className="rang mono">#{i + 1}</span>
+              <div key={h} className={`raekke${medalje ? " medalje" : ""}${vend ? " vend" : ""}`} style={stil}>
+                <span className="rang mono">#{plads + 1}</span>
                 <span className="navn">{st.navne[h]}</span>
+                {plads === 0 && medalje && <Solbriller delay={vend ? 4.6 : 0.6} />}
+                {s.r === 2 && p === orden[orden.length - 1].p && p < max && <Graad />}
                 <div className="bar">
                   <i style={{ width: `${Math.round((p / Math.max(1, max)) * 100)}%` }} />
                 </div>

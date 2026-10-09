@@ -17,6 +17,26 @@
 @keyframes mq-eq { 0% { transform: scaleY(.12); } 100% { transform: scaleY(1); } }
 @keyframes mq-fall { 0% { transform: translateY(-80px) rotate(0deg); } 100% { transform: translateY(1180px) rotate(720deg); } }
 @keyframes mq-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+@keyframes mq-briller {
+  0% { transform: translateY(-520px) rotate(-28deg); opacity: 0; }
+  12% { opacity: 1; }
+  68% { transform: translateY(8px) rotate(2deg); }
+  82% { transform: translateY(-8px) rotate(-9deg); }
+  100% { transform: translateY(0) rotate(-5deg); opacity: 1; }
+}
+@keyframes mq-hulk { 0% { transform: translateY(-3px) rotate(-5deg); } 100% { transform: translateY(3px) rotate(5deg); } }
+@keyframes mq-taare { 0% { transform: translateY(0) scale(.6); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(88px) scale(1); opacity: 0; } }
+/* Stillingen efter baglæns-runden: står omvendt og spejlvendt, ryster, og tumler så på plads */
+@keyframes mq-vend {
+  0%, 50% { transform: translateY(var(--dy)) scaleX(-1) rotate(0deg) rotateX(0deg); }
+  54% { transform: translateY(var(--dy)) scaleX(-1) rotate(-2.5deg) rotateX(0deg); }
+  58% { transform: translateY(var(--dy)) scaleX(-1) rotate(2.5deg) rotateX(0deg); }
+  62% { transform: translateY(var(--dy)) scaleX(-1) rotate(-2.5deg) rotateX(0deg); }
+  66% { transform: translateY(var(--dy)) scaleX(-1) rotate(0deg) rotateX(0deg); }
+  90% { transform: translateY(calc(var(--dy) * -0.07)) scaleX(1.03) rotate(0deg) rotateX(720deg); }
+  100% { transform: translateY(0) scaleX(1) rotate(0deg) rotateX(720deg); }
+}
+@keyframes mq-spejl { 0%, 62% { transform: scaleX(-1); } 80%, 100% { transform: scaleX(1); } }
 @keyframes mq-pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
 
 * { box-sizing: border-box; }
@@ -112,6 +132,16 @@ button { cursor: pointer; }
 .raekker { display: flex; flex-direction: column; gap: 22px; }
 .raekke { display: grid; grid-template-columns: 120px 520px 1fr 140px; align-items: center; gap: 32px; height: 132px; padding: 0 40px;
           border-radius: 24px; background: var(--surface); border: 2px solid var(--line); }
+.raekke { position: relative; }
+.solbriller { position: absolute; left: 190px; top: 50%; width: 150px; margin-top: -50px; z-index: 2; pointer-events: none;
+              filter: drop-shadow(3px 0 0 #f6f6f8) drop-shadow(-3px 0 0 #f6f6f8) drop-shadow(0 3px 0 #f6f6f8) drop-shadow(0 -3px 0 #f6f6f8);
+              animation: mq-briller 1.5s cubic-bezier(.3, .7, .3, 1) .6s both; }
+.graad { position: absolute; left: 652px; top: 50%; margin-top: -44px; font-size: 64px; line-height: 1; z-index: 2; pointer-events: none;
+         animation: mq-hulk .28s ease-in-out infinite alternate; }
+.graad i { position: absolute; top: 46px; width: 11px; height: 16px; border-radius: 50% 50% 50% 50% / 35% 35% 65% 65%; background: #5cc8ff;
+           opacity: 0; animation: mq-taare 1.3s ease-in infinite; }
+.raekke.vend { animation: mq-vend 4.2s cubic-bezier(.45, 0, .2, 1) both; }
+.stilling h2.vend { animation: mq-spejl 4.2s ease-in-out both; }
 .raekke .rang { font-size: 56px; font-weight: 700; color: var(--muted-2); }
 .raekke .navn { font-size: 56px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .raekke .bar { height: 28px; border-radius: 14px; background: #1f1f2c; overflow: hidden; }
@@ -137,5 +167,5 @@ button { cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   .konfetti { display: none; }
-  .eq span, .krone, .svar { animation: none !important; }
+  .eq span, .krone, .svar, .solbriller, .graad, .graad i, .raekke.vend, h2.vend { animation: none !important; }
 }
